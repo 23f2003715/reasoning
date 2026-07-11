@@ -1,20 +1,29 @@
- import re
+import re
 
 def solve_problem(text: str):
-    # Find quantities and prices
+    qty = 0
+    price = 0
+    discount = 0
+    tax = 0
+
     qty_match = re.search(r'orders (\d+)', text)
+    if qty_match:
+        qty = int(qty_match.group(1))
+
     price_match = re.search(r'at (\d+) dollars each', text)
+    if price_match:
+        price = int(price_match.group(1))
+
     discount_match = re.search(r'(\d+)% bulk discount', text)
+    if discount_match:
+        discount = int(discount_match.group(1))
+
     tax_match = re.search(r'(\d+)% tax', text)
+    if tax_match:
+        tax = int(tax_match.group(1))
 
-    qty = int(qty_match.group(1)) if qty_match else 0
-    price = int(price_match.group(1)) if price_match else 0
     base = qty * price
-
-    discount = int(discount_match.group(1)) if discount_match else 0
     subtotal = base * (1 - discount/100)
-
-    tax = int(tax_match.group(1)) if tax_match else 0
     total = int(round(subtotal * (1 + tax/100)))
 
     reasoning = (
@@ -25,4 +34,3 @@ def solve_problem(text: str):
     )
 
     return {"reasoning": reasoning, "answer": total}
-
